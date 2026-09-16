@@ -2,6 +2,8 @@
 
 DANZ Run Lab is a lightweight running pace planner and progress tracker. Choose a distance and target finish time to generate a precise target pace, speed, and kilometre-by-kilometre split plan.
 
+[Open DANZ Run Lab](https://danzrunlab.com/)
+
 ![DANZ Run Lab progress dashboard](progress.png)
 
 ## Features
@@ -41,7 +43,7 @@ Submitting a pace plan sends the runner name, session date, distance, and target
 ## Supabase setup
 
 1. Run [`supabase/schema.sql`](supabase/schema.sql) in the project's Supabase SQL Editor.
-2. In **Authentication → URL Configuration**, set the Site URL and redirect URL to `https://stainaz.github.io/danz-run-lab/`.
+2. In **Authentication → URL Configuration**, set the Site URL and redirect URL to `https://danzrunlab.com/`.
 3. Use `asimango@gmail.com` in the app's **Admin login** dialog.
 
 ## Technology
