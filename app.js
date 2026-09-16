@@ -1,4 +1,7 @@
 const storageKey = "danz-run-lab-sessions";
+const pendingKey = "danz-run-lab-pending-sessions";
+const supabaseConfig = window.DANZ_SUPABASE;
+const supabaseClient = window.supabase?.createClient(supabaseConfig.url, supabaseConfig.publishableKey);
 const form = document.querySelector("#pace-form");
 const distanceInputs = [...document.querySelectorAll('[name="distance"]')];
 const timeInputs = ["hours", "minutes", "seconds"].map((id) => document.querySelector(`#${id}`));
@@ -8,6 +11,9 @@ const sessionDate = document.querySelector("#session-date");
 const runnerName = document.querySelector("#runner-name");
 const sessionDialog = document.querySelector("#session-dialog");
 const sessionEditor = document.querySelector("#session-editor");
+const adminDialog = document.querySelector("#admin-dialog");
+let sessionsCache = [];
+let isAdmin = false;
 let installPrompt;
 let toastTimer;
 
@@ -74,18 +80,21 @@ function renderPlan() {
 }
 
 function normalizeSession(session) {
-  const distance = Number(session.distance);
-  const totalSeconds = Number(session.totalSeconds);
-  const actualSeconds = session.actualSeconds ? Number(session.actualSeconds) : null;
+  const distance = Number(session.distance ?? session.distance_km);
+  const totalSeconds = Number(session.totalSeconds ?? session.target_seconds);
+  const sourceActualSeconds = session.actualSeconds ?? session.actual_seconds;
+  const actualSeconds = sourceActualSeconds ? Number(sourceActualSeconds) : null;
   return {
     ...session,
     id: String(session.id || makeId()),
     runner: String(session.runner || "Runner").slice(0, 40),
+    date: session.date || session.session_date,
     distance,
     totalSeconds,
     paceSeconds: totalSeconds / distance,
     actualSeconds,
     status: actualSeconds ? "completed" : "planned",
+    createdAt: session.createdAt || session.created_at || new Date().toISOString(),
   };
 }
 
@@ -96,16 +105,118 @@ function isValidSession(session) {
 }
 
 function getSessions() {
+  return sessionsCache;
+}
+
+function toDatabaseSession(session) {
+  return {
+    id: session.id,
+    runner: session.runner,
+    session_date: session.date,
+    distance_km: session.distance,
+    target_seconds: Math.round(session.totalSeconds),
+    actual_seconds: session.actualSeconds ? Math.round(session.actualSeconds) : null,
+    created_at: session.createdAt || new Date().toISOString(),
+  };
+}
+
+function readStoredSessions(key) {
   try {
-    const sessions = JSON.parse(localStorage.getItem(storageKey)) || [];
+    const sessions = JSON.parse(localStorage.getItem(key)) || [];
     return Array.isArray(sessions) ? sessions.map(normalizeSession).filter(isValidSession) : [];
   } catch {
     return [];
   }
 }
 
-function saveSessions(sessions) {
-  localStorage.setItem(storageKey, JSON.stringify(sessions));
+function queueSession(session) {
+  const pending = readStoredSessions(pendingKey);
+  if (!pending.some((item) => item.id === session.id)) pending.push(session);
+  localStorage.setItem(pendingKey, JSON.stringify(pending));
+}
+
+async function submitSession(session) {
+  if (!supabaseClient || !navigator.onLine) {
+    queueSession(session);
+    return false;
+  }
+  const { error } = await supabaseClient.from("sessions").insert(toDatabaseSession(session));
+  if (error && error.code !== "23505") {
+    queueSession(session);
+    return false;
+  }
+  return true;
+}
+
+async function syncPendingSessions() {
+  const pending = readStoredSessions(pendingKey);
+  if (!pending.length || !supabaseClient || !navigator.onLine) return;
+  const remaining = [];
+  for (const session of pending) {
+    const { error } = await supabaseClient.from("sessions").insert(toDatabaseSession(session));
+    if (error && error.code !== "23505") remaining.push(session);
+  }
+  if (remaining.length) localStorage.setItem(pendingKey, JSON.stringify(remaining));
+  else localStorage.removeItem(pendingKey);
+}
+
+async function refreshAdminData() {
+  document.querySelector("#sync-state").textContent = "Syncing…";
+  const { data, error } = await supabaseClient.from("sessions").select("*").order("created_at", { ascending: false });
+  if (error) {
+    document.querySelector("#sync-state").textContent = "Setup required";
+    throw error;
+  }
+  sessionsCache = data.map(normalizeSession).filter(isValidSession);
+  document.querySelector("#sync-state").textContent = "Cloud synced";
+  renderAllData();
+}
+
+async function migrateLegacySessions() {
+  const legacy = readStoredSessions(storageKey);
+  if (!legacy.length) return;
+  const { error } = await supabaseClient.from("sessions").upsert(legacy.map(toDatabaseSession), { onConflict: "id" });
+  if (!error) localStorage.removeItem(storageKey);
+}
+
+async function setAdminMode(enabled) {
+  isAdmin = enabled;
+  document.querySelectorAll(".admin-only").forEach((element) => element.classList.toggle("hidden", !enabled));
+  document.querySelector("#admin-access").textContent = enabled ? "Sign out" : "Admin login";
+  if (!enabled) {
+    sessionsCache = [];
+    showView("plan");
+    renderAllData();
+    return;
+  }
+  try {
+    await migrateLegacySessions();
+    await refreshAdminData();
+  } catch {
+    showToast("Run the Supabase database setup to enable admin data.");
+  }
+}
+
+async function handleAuthSession(session) {
+  const email = session?.user?.email?.toLowerCase();
+  if (!email) return setAdminMode(false);
+  if (email !== supabaseConfig.adminEmail.toLowerCase()) {
+    await supabaseClient.auth.signOut();
+    showToast("This account is not authorized.");
+    return setAdminMode(false);
+  }
+  adminDialog.close();
+  await setAdminMode(true);
+}
+
+async function initializeAuth() {
+  if (!supabaseClient) return;
+  const { data } = await supabaseClient.auth.getSession();
+  await handleAuthSession(data.session);
+  supabaseClient.auth.onAuthStateChange((_event, session) => {
+    setTimeout(() => handleAuthSession(session), 0);
+  });
+  await syncPendingSessions();
 }
 
 function distanceName(distance) {
@@ -153,10 +264,11 @@ function renderSessions() {
   }));
   list.querySelectorAll("[data-duplicate]").forEach((button) => button.addEventListener("click", () => duplicateSession(button.dataset.duplicate)));
   list.querySelectorAll("[data-share]").forEach((button) => button.addEventListener("click", () => shareSession(getSessions().find((session) => session.id === button.dataset.share))));
-  list.querySelectorAll("[data-delete]").forEach((button) => button.addEventListener("click", () => {
+  list.querySelectorAll("[data-delete]").forEach((button) => button.addEventListener("click", async () => {
     if (!globalThis.confirm("Delete this session?")) return;
-    saveSessions(getSessions().filter((session) => session.id !== button.dataset.delete));
-    renderAllData();
+    const { error } = await supabaseClient.from("sessions").delete().eq("id", button.dataset.delete);
+    if (error) return showToast("Could not delete this session.");
+    await refreshAdminData();
     showToast("Session deleted.");
   }));
 }
@@ -208,6 +320,7 @@ function renderAllData() {
 }
 
 function showView(viewName) {
+  if (viewName !== "plan" && !isAdmin) return;
   document.querySelectorAll(".tab, .view").forEach((element) => element.classList.remove("active"));
   document.querySelector(`.tab[data-view="${viewName}"]`).classList.add("active");
   document.querySelector(`#${viewName}`).classList.add("active");
@@ -228,12 +341,13 @@ function openSessionEditor(id, completing = false) {
   (completing ? document.querySelector("#dialog-actual") : document.querySelector("#dialog-runner")).focus();
 }
 
-function duplicateSession(id) {
+async function duplicateSession(id) {
   const session = getSessions().find((item) => item.id === id);
   if (!session) return;
   const copy = { ...session, id: makeId(), actualSeconds: null, status: "planned", createdAt: new Date().toISOString() };
-  saveSessions([copy, ...getSessions()]);
-  renderAllData();
+  const { error } = await supabaseClient.from("sessions").insert(toDatabaseSession(copy));
+  if (error) return showToast("Could not duplicate this session.");
+  await refreshAdminData();
   showToast("Session duplicated.");
 }
 
@@ -279,7 +393,7 @@ function loadSharedPlan() {
   runnerName.value = (params.get("runner") || "").slice(0, 40);
   if (/^\d{4}-\d{2}-\d{2}$/.test(params.get("date") || "")) sessionDate.value = params.get("date");
   renderPlan();
-  document.querySelector("#form-message").textContent = "Shared plan loaded. Book it to save it on this device.";
+  document.querySelector("#form-message").textContent = "Shared plan loaded. Submit it to add it to the run list.";
 }
 
 function downloadFile(name, contents, type) {
@@ -321,14 +435,14 @@ distanceInputs.forEach((input) => input.addEventListener("change", () => {
 }));
 [...timeInputs, customDistance].forEach((input) => input.addEventListener("input", renderPlan));
 
-document.querySelector("#save-session").addEventListener("click", () => {
+document.querySelector("#save-session").addEventListener("click", async () => {
   const plan = calculatePlan();
   const message = document.querySelector("#form-message");
   if (!plan || !form.checkValidity() || !runnerName.value.trim()) {
     message.textContent = "Add your name, date and a valid target time.";
     return;
   }
-  saveSessions([{
+  const session = normalizeSession({
     id: makeId(),
     runner: runnerName.value.trim(),
     date: sessionDate.value,
@@ -338,9 +452,13 @@ document.querySelector("#save-session").addEventListener("click", () => {
     actualSeconds: null,
     status: "planned",
     createdAt: new Date().toISOString(),
-  }, ...getSessions()]);
-  message.textContent = "Pace booked. Your session is on the run list.";
-  renderAllData();
+  });
+  message.textContent = "Submitting your session…";
+  const synced = await submitSession(session);
+  message.textContent = synced
+    ? "Pace submitted. The DANZ team can now see your session."
+    : "Saved on this device. It will submit automatically when the connection is ready.";
+  if (isAdmin && synced) await refreshAdminData();
 });
 
 document.querySelector("#share-plan").addEventListener("click", () => {
@@ -350,12 +468,44 @@ document.querySelector("#share-plan").addEventListener("click", () => {
 });
 
 document.querySelectorAll(".tab").forEach((tab) => tab.addEventListener("click", () => showView(tab.dataset.view)));
+document.querySelector("#admin-access").addEventListener("click", async () => {
+  if (isAdmin) {
+    await supabaseClient.auth.signOut();
+    showToast("Signed out.");
+    return;
+  }
+  document.querySelector("#admin-message").textContent = "";
+  adminDialog.showModal();
+});
+document.querySelector("#close-admin-dialog").addEventListener("click", () => adminDialog.close());
+adminDialog.addEventListener("click", (event) => {
+  if (event.target === adminDialog) adminDialog.close();
+});
+document.querySelector("#admin-form").addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const message = document.querySelector("#admin-message");
+  const email = document.querySelector("#admin-email").value.trim().toLowerCase();
+  if (email !== supabaseConfig.adminEmail.toLowerCase()) {
+    message.textContent = "This email is not authorized for admin access.";
+    return;
+  }
+  if (!supabaseClient) {
+    message.textContent = "Admin sign-in is temporarily unavailable.";
+    return;
+  }
+  message.textContent = "Sending a secure sign-in link…";
+  const { error } = await supabaseClient.auth.signInWithOtp({
+    email,
+    options: { emailRedirectTo: `${location.origin}${location.pathname}` },
+  });
+  message.textContent = error ? error.message : "Check your email and open the sign-in link.";
+});
 document.querySelector("#close-dialog").addEventListener("click", () => sessionDialog.close());
 sessionDialog.addEventListener("click", (event) => {
   if (event.target === sessionDialog) sessionDialog.close();
 });
 
-sessionEditor.addEventListener("submit", (event) => {
+sessionEditor.addEventListener("submit", async (event) => {
   event.preventDefault();
   const targetSeconds = parseDuration(document.querySelector("#dialog-target").value);
   const actualValue = document.querySelector("#dialog-actual").value.trim();
@@ -367,17 +517,23 @@ sessionEditor.addEventListener("submit", (event) => {
     return;
   }
   const id = document.querySelector("#dialog-session-id").value;
-  const sessions = getSessions().map((session) => session.id === id ? normalizeSession({
-    ...session,
+  const currentSession = getSessions().find((session) => session.id === id);
+  if (!currentSession) return;
+  const updatedSession = normalizeSession({
+    ...currentSession,
     runner: document.querySelector("#dialog-runner").value.trim(),
     date: document.querySelector("#dialog-date").value,
     distance,
     totalSeconds: targetSeconds,
     actualSeconds,
-  }) : session);
-  saveSessions(sessions);
+  });
+  const { error } = await supabaseClient.from("sessions").update(toDatabaseSession(updatedSession)).eq("id", id);
+  if (error) {
+    message.textContent = "Could not update this session.";
+    return;
+  }
   sessionDialog.close();
-  renderAllData();
+  await refreshAdminData();
   showToast(actualSeconds ? "Result saved." : "Session updated.");
 });
 
@@ -393,8 +549,9 @@ document.querySelector("#restore-data").addEventListener("change", async (event)
     if (!Array.isArray(data)) throw new Error("Backup must contain an array.");
     const sessions = data.map(normalizeSession);
     if (sessions.length !== data.length || !sessions.every(isValidSession)) throw new Error("Backup contains invalid sessions.");
-    saveSessions(sessions);
-    renderAllData();
+    const { error } = await supabaseClient.from("sessions").upsert(sessions.map(toDatabaseSession), { onConflict: "id" });
+    if (error) throw error;
+    await refreshAdminData();
     showToast(`${sessions.length} sessions restored.`);
   } catch {
     showToast("That backup file is not valid.");
@@ -415,9 +572,14 @@ document.querySelector("#install-app").addEventListener("click", async () => {
   document.querySelector("#install-app").classList.add("hidden");
 });
 window.addEventListener("appinstalled", () => showToast("DANZ Run Lab installed."));
+window.addEventListener("online", async () => {
+  await syncPendingSessions();
+  if (isAdmin) await refreshAdminData();
+});
 
 form.addEventListener("submit", (event) => event.preventDefault());
 if ("serviceWorker" in navigator) window.addEventListener("load", () => navigator.serviceWorker.register("service-worker.js"));
 loadSharedPlan();
 renderPlan();
 renderAllData();
+initializeAuth();

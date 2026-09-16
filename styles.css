@@ -95,6 +95,7 @@ legend { margin-bottom: 12px; }
 .splits li span:first-child { color: #aeb2aa; }
 .primary-button { display: flex; width: calc(100% - 56px); justify-content: space-between; margin: 24px 28px 12px; padding: 17px 18px; border: 0; border-radius: 2px; background: var(--lime); color: var(--ink); cursor: pointer; font-weight: 800; }
 .primary-button:hover { background: #e4ff79; }
+.submission-note { margin: 0 28px 10px; color: #aeb2aa; font-size: 10px; line-height: 1.5; text-align: center; }
 .result-link { display: block; margin: 0 auto 8px; padding: 5px; border: 0; border-bottom: 1px solid #666b63; background: transparent; color: #c5c9c0; cursor: pointer; font: 11px "DM Mono", monospace; }
 .form-message { min-height: 20px; margin: 0 28px 18px; color: var(--lime); font-size: 12px; }
 
@@ -145,12 +146,13 @@ legend { margin-bottom: 12px; }
 
 dialog { width: min(520px, calc(100% - 30px)); padding: 0; border: 1px solid var(--ink); border-radius: 3px; background: var(--paper); color: var(--ink); box-shadow: 0 25px 80px rgba(0,0,0,.25); }
 dialog::backdrop { background: rgba(21,24,20,.7); backdrop-filter: blur(3px); }
-#session-editor { padding: 30px; }
+#session-editor, #admin-form { padding: 30px; }
 .dialog-heading { display: flex; justify-content: space-between; align-items: start; margin-bottom: 25px; }
 .dialog-heading .eyebrow { margin-bottom: 7px; }
 .icon-button { width: 34px; height: 34px; border: 1px solid var(--line); border-radius: 50%; background: transparent; cursor: pointer; font-size: 20px; }
 .dialog-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
 .optional { float: right; color: var(--muted); font-size: 9px; }
+.auth-note { margin: 0 0 25px; color: var(--muted); font-size: 14px; line-height: 1.6; }
 .dialog-message { min-height: 18px; margin: 18px 0 0; color: #b53b22; font-size: 12px; }
 .primary-button.dialog-save { width: 100%; margin: 10px 0 0; background: var(--ink); color: var(--lime); }
 .toast { position: fixed; right: 24px; bottom: 24px; z-index: 30; padding: 13px 17px; border-radius: 2px; background: var(--ink); color: white; opacity: 0; transform: translateY(12px); transition: .2s ease; pointer-events: none; font: 11px "DM Mono", monospace; }
@@ -161,8 +163,9 @@ footer { display: flex; justify-content: space-between; padding: 24px 28px 40px;
 @media (max-width: 760px) {
   .site-header, main { padding-inline: 18px; }
   .brand { font-size: 17px; }
-  .header-actions { gap: 10px; }
-  .status { font-size: 9px; }
+  .header-actions { gap: 6px; }
+  .status { display: none; }
+  .text-button { padding-inline: 8px; font-size: 9px; }
   .hero { grid-template-columns: 1fr; gap: 25px; padding: 45px 0 38px; }
   .planner-grid, .insight-grid, .insight-details { width: 100%; min-width: 0; grid-template-columns: minmax(0, 1fr); }
   .hero > *, .planner-grid > *, .section-title > * { width: 100%; min-width: 0; }

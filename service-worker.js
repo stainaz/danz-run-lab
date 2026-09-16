@@ -1,5 +1,5 @@
-const cacheName = "danz-run-lab-v2";
-const appShell = ["./", "./index.html", "./styles.css", "./app.js", "./manifest.webmanifest", "./icon.svg"];
+const cacheName = "danz-run-lab-v3";
+const appShell = ["./", "./index.html", "./styles.css", "./supabase-config.js", "./app.js", "./manifest.webmanifest", "./icon.svg"];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(caches.open(cacheName).then((cache) => cache.addAll(appShell)));

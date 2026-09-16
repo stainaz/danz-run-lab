@@ -22,6 +22,7 @@
       </a>
       <div class="header-actions">
         <button id="install-app" class="text-button hidden" type="button">Install app</button>
+        <button id="admin-access" class="text-button" type="button">Admin login</button>
         <div class="status"><span></span> Live</div>
       </div>
     </header>
@@ -29,8 +30,8 @@
     <main>
       <nav class="tabs" aria-label="Main navigation">
         <button class="tab active" data-view="plan">Plan a run</button>
-        <button class="tab" data-view="sessions">Sessions <span id="session-count">0</span></button>
-        <button class="tab" data-view="insights">Insights</button>
+        <button class="tab admin-only hidden" data-view="sessions">Sessions <span id="session-count">0</span></button>
+        <button class="tab admin-only hidden" data-view="insights">Insights</button>
       </nav>
 
       <section id="plan" class="view active">
@@ -92,7 +93,8 @@
             </div>
             <div class="splits-heading"><span>Split plan</span><span>Elapsed</span></div>
             <ol id="splits" class="splits"></ol>
-            <button id="save-session" class="primary-button" type="button">Book this pace <span>→</span></button>
+            <button id="save-session" class="primary-button" type="button">Submit this pace <span>→</span></button>
+            <p class="submission-note">Submitting securely sends your name and pace plan to DANZ Run Lab.</p>
             <button id="share-plan" class="result-link" type="button">Share this plan</button>
             <p id="form-message" class="form-message" role="status"></p>
           </aside>
@@ -102,7 +104,7 @@
       <section id="sessions" class="view">
         <div class="section-title"><div><p class="eyebrow">THE RUN LIST</p><h1>Your sessions.</h1></div><p>Every target becomes a plan. Every finish becomes data.</p></div>
         <div class="session-toolbar">
-          <p><strong id="completed-count">0</strong> completed runs</p>
+          <p><strong id="completed-count">0</strong> completed runs · <span id="sync-state">Cloud synced</span></p>
           <div>
             <button id="export-csv" class="outline-button" type="button">Export CSV</button>
             <button id="backup-data" class="outline-button" type="button">Backup data</button>
@@ -152,9 +154,24 @@
       </form>
     </dialog>
 
+    <dialog id="admin-dialog">
+      <form id="admin-form">
+        <div class="dialog-heading">
+          <div><p class="eyebrow">PRIVATE ACCESS</p><h2>Admin sign in</h2></div>
+          <button id="close-admin-dialog" class="icon-button" type="button" aria-label="Close">×</button>
+        </div>
+        <p class="auth-note">Sessions and insights are restricted to the DANZ Run Lab administrator.</p>
+        <label class="field">Admin email<input id="admin-email" type="email" autocomplete="email" value="asimango@gmail.com" required /></label>
+        <p id="admin-message" class="dialog-message" role="status"></p>
+        <button class="primary-button dialog-save" type="submit">Email me a sign-in link <span>→</span></button>
+      </form>
+    </dialog>
+
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
     <footer><span>DANZ RUN LAB © 2026</span><span>Built for the next finish line.</span></footer>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
     <script src="app.js"></script>
   </body>
 </html>
