@@ -4,7 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#f4f1e8" />
+    <meta name="description" content="Plan precise running paces, track results, and follow your progress." />
     <title>DANZ Run Lab</title>
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="icon" href="icon.svg" type="image/svg+xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -17,7 +20,10 @@
         <span class="brand-mark">D</span>
         <span>DANZ <em>RUN LAB</em></span>
       </a>
-      <div class="status"><span></span> Pilot mode</div>
+      <div class="header-actions">
+        <button id="install-app" class="text-button hidden" type="button">Install app</button>
+        <div class="status"><span></span> Live</div>
+      </div>
     </header>
 
     <main>
@@ -87,6 +93,7 @@
             <div class="splits-heading"><span>Split plan</span><span>Elapsed</span></div>
             <ol id="splits" class="splits"></ol>
             <button id="save-session" class="primary-button" type="button">Book this pace <span>→</span></button>
+            <button id="share-plan" class="result-link" type="button">Share this plan</button>
             <p id="form-message" class="form-message" role="status"></p>
           </aside>
         </div>
@@ -94,22 +101,58 @@
 
       <section id="sessions" class="view">
         <div class="section-title"><div><p class="eyebrow">THE RUN LIST</p><h1>Your sessions.</h1></div><p>Every target becomes a plan. Every finish becomes data.</p></div>
+        <div class="session-toolbar">
+          <p><strong id="completed-count">0</strong> completed runs</p>
+          <div>
+            <button id="export-csv" class="outline-button" type="button">Export CSV</button>
+            <button id="backup-data" class="outline-button" type="button">Backup data</button>
+            <label class="outline-button file-button">Restore backup<input id="restore-data" type="file" accept="application/json" /></label>
+          </div>
+        </div>
         <div id="session-list" class="session-list"></div>
       </section>
 
       <section id="insights" class="view">
-        <div class="section-title"><div><p class="eyebrow">PILOT SIGNALS</p><h1>What runners want.</h1></div><p>A simple view of demand collected through this prototype.</p></div>
+        <div class="section-title"><div><p class="eyebrow">PROGRESS SIGNALS</p><h1>Your running story.</h1></div><p>Targets, finishes, and personal bests from every completed run.</p></div>
         <div class="insight-grid">
           <article class="insight-card lime"><span>Sessions planned</span><strong id="total-sessions">0</strong><small>all time</small></article>
-          <article class="insight-card dark"><span>Most requested</span><strong id="popular-distance">—</strong><small>distance</small></article>
-          <article class="insight-card paper"><span>Average target</span><strong id="average-pace">—</strong><small>per kilometre</small></article>
+          <article class="insight-card dark"><span>Runs completed</span><strong id="runs-completed">0</strong><small>with results</small></article>
+          <article class="insight-card orange"><span>Personal best</span><strong id="personal-best">—</strong><small>fastest pace /km</small></article>
+          <article class="insight-card paper"><span>Average target</span><strong id="average-pace">—</strong><small>pace per kilometre</small></article>
         </div>
-        <div class="card data-card">
-          <div class="card-heading"><span>↗</span><div><h2>Demand by distance</h2><p>Sessions created on this device</p></div></div>
-          <div id="distance-bars" class="distance-bars"></div>
+        <div class="insight-details">
+          <div class="card data-card">
+            <div class="card-heading"><span>↗</span><div><h2>Pace history</h2><p>Actual pace from completed runs</p></div></div>
+            <div id="pace-history" class="pace-history"></div>
+          </div>
+          <div class="card data-card">
+            <div class="card-heading"><span>◎</span><div><h2>Runs by distance</h2><p>All saved sessions</p></div></div>
+            <div id="distance-bars" class="distance-bars"></div>
+          </div>
         </div>
       </section>
     </main>
+
+    <dialog id="session-dialog">
+      <form id="session-editor" method="dialog">
+        <div class="dialog-heading">
+          <div><p class="eyebrow">SESSION DETAILS</p><h2 id="dialog-title">Update your run</h2></div>
+          <button id="close-dialog" class="icon-button" type="button" aria-label="Close">×</button>
+        </div>
+        <input id="dialog-session-id" type="hidden" />
+        <label class="field">Runner name<input id="dialog-runner" type="text" maxlength="40" required /></label>
+        <div class="dialog-grid">
+          <label class="field">Session date<input id="dialog-date" type="date" required /></label>
+          <label class="field">Distance (km)<input id="dialog-distance" type="number" min="0.4" max="100" step="any" required /></label>
+        </div>
+        <label class="field">Target finish time<input id="dialog-target" type="text" inputmode="numeric" placeholder="25:00 or 1:45:00" required /></label>
+        <label class="field">Actual finish time <span class="optional">Optional</span><input id="dialog-actual" type="text" inputmode="numeric" placeholder="Leave blank until completed" /></label>
+        <p id="dialog-message" class="dialog-message" role="status"></p>
+        <button class="primary-button dialog-save" type="submit">Save session <span>→</span></button>
+      </form>
+    </dialog>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
     <footer><span>DANZ RUN LAB © 2026</span><span>Built for the next finish line.</span></footer>
     <script src="app.js"></script>
