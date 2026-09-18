@@ -1,4 +1,4 @@
-const cacheName = "danz-run-lab-v3";
+const cacheName = "danz-run-lab-v4";
 const appShell = ["./", "./index.html", "./styles.css", "./supabase-config.js", "./app.js", "./manifest.webmanifest", "./icon.svg"];
 
 self.addEventListener("install", (event) => {
