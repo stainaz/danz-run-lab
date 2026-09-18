@@ -1,4 +1,5 @@
 {
+  "outputDirectory": ".",
   "rewrites": [
     { "source": "/run-weekly/:path*", "destination": "/index.html" },
     { "source": "/building-danz", "destination": "/index.html" },
