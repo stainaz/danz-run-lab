@@ -1,6 +1,61 @@
 {
   "products": [
     {
+      "id": "danz-2-in-1-running-shorts",
+      "slug": "2-in-1-running-shorts",
+      "name": "Danz 2-in-1 Running Shorts",
+      "category": "Running Shorts",
+      "description": "Approved Danz 2-in-1 running shorts with a lightweight quick-dry outer shell and supportive compression inner liner.",
+      "images": [
+        {
+          "src": "/public/images/products/shorts/danz-shorts-main-front-back.png",
+          "label": "Main view",
+          "alt": "Front and back views of the approved Danz 2-in-1 Running Shorts"
+        },
+        {
+          "src": "/public/images/products/shorts/danz-shorts-front.png",
+          "label": "Front",
+          "alt": "Front view of the approved Danz 2-in-1 Running Shorts"
+        },
+        {
+          "src": "/public/images/products/shorts/danz-shorts-back.png",
+          "label": "Back",
+          "alt": "Back view of the approved Danz 2-in-1 Running Shorts"
+        },
+        {
+          "src": "/public/images/products/shorts/danz-shorts-compression-liner.png",
+          "label": "Compression liner",
+          "alt": "Compression inner liner detail on the approved Danz running shorts"
+        },
+        {
+          "src": "/public/images/products/shorts/danz-shorts-phone-pocket.png",
+          "label": "Phone pocket",
+          "alt": "Phone pocket in the inner liner of the approved Danz running shorts"
+        },
+        {
+          "src": "/public/images/products/shorts/danz-shorts-rear-zip-pocket.png",
+          "label": "Rear zip pocket",
+          "alt": "Rear zip pocket detail on the approved Danz running shorts"
+        },
+        {
+          "src": "/public/images/products/sources/shorts.png",
+          "label": "Specification sheet",
+          "alt": "Full approved specification sheet for the Danz 2-in-1 Running Shorts"
+        }
+      ],
+      "features": [
+        "Lightweight quick-dry outer shell",
+        "Compression inner liner",
+        "Phone pocket in inner liner",
+        "Rear zip pocket",
+        "Drawstring waist",
+        "Breathable running construction",
+        "Small minimal Danz branding"
+      ],
+      "priceDisplay": "Coming soon",
+      "status": "published"
+    },
+    {
       "id": "danz-performance-tee-run-measure-improve",
       "slug": "performance-tee-run-measure-improve",
       "name": "Danz Performance Tee — Run. Measure. Improve.",
@@ -122,6 +177,7 @@
     }
   ],
   "sourceCatalogues": [
+    "/public/images/products/sources/shorts.png",
     "/public/images/products/sources/ChatGPT Image Sep 18, 2026, 02_11_33 PM.png",
     "/public/images/products/sources/DANZ Run Lab Shirt Design Catalogue.png",
     "/public/images/products/sources/DANZ Run Lab T-Shirt Collection.png",

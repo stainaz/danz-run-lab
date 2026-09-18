@@ -199,6 +199,43 @@
       </form>
     </dialog>
 
+    <dialog id="newsletter-dialog" aria-labelledby="newsletter-dialog-title">
+      <form class="newsletter-modal newsletter-form" novalidate>
+        <div class="dialog-heading">
+          <div><p class="eyebrow">RUN WEEKLY</p><h2 id="newsletter-dialog-title">One useful running idea every week.</h2></div>
+          <button class="icon-button" type="button" data-close-newsletter aria-label="Close subscription form">×</button>
+        </div>
+        <label class="field">Your email
+          <input type="email" name="email" autocomplete="email" inputmode="email" placeholder="runner@example.com" required />
+        </label>
+        <label class="newsletter-honeypot" aria-hidden="true">Website<input type="text" name="website" tabindex="-1" autocomplete="off" /></label>
+        <button class="primary-button dialog-save" type="submit">Subscribe →</button>
+        <p class="dialog-message newsletter-message" data-newsletter-message role="status"></p>
+      </form>
+    </dialog>
+
+    <dialog id="image-lightbox" class="lightbox-dialog" aria-label="Product image viewer">
+      <div class="lightbox-shell">
+        <header class="lightbox-header">
+          <div><strong id="lightbox-label"></strong><span id="lightbox-counter"></span></div>
+          <button class="lightbox-icon" type="button" data-lightbox-close aria-label="Close image viewer">×</button>
+        </header>
+        <div id="lightbox-viewport" class="lightbox-viewport">
+          <button class="lightbox-arrow previous" type="button" data-lightbox-previous aria-label="Previous image">←</button>
+          <img id="lightbox-image" alt="" draggable="false" />
+          <button class="lightbox-arrow next" type="button" data-lightbox-next aria-label="Next image">→</button>
+        </div>
+        <footer class="lightbox-footer">
+          <div class="lightbox-zoom" aria-label="Image zoom controls">
+            <button type="button" data-lightbox-zoom-out aria-label="Zoom out">−</button>
+            <span id="lightbox-zoom-value">100%</span>
+            <button type="button" data-lightbox-zoom-in aria-label="Zoom in">+</button>
+          </div>
+          <div id="lightbox-thumbnails" class="lightbox-thumbnails" aria-label="Image thumbnails"></div>
+        </footer>
+      </div>
+    </dialog>
+
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
     <footer><span>Danz Run Lab © 2026 · A STAINAZ company</span><span>Built for the next finish line.</span></footer>

@@ -1,4 +1,4 @@
-const cacheName = "danz-run-lab-v6";
+const cacheName = "danz-run-lab-v7";
 const appShell = [
   "/",
   "/index.html",
@@ -13,6 +13,13 @@ const appShell = [
   "/content/products.json",
   "/content/run-spots.json",
   "/content/site.json",
+  "/public/images/products/shorts/danz-shorts-main-front-back.png",
+  "/public/images/products/shorts/danz-shorts-front.png",
+  "/public/images/products/shorts/danz-shorts-back.png",
+  "/public/images/products/shorts/danz-shorts-compression-liner.png",
+  "/public/images/products/shorts/danz-shorts-phone-pocket.png",
+  "/public/images/products/shorts/danz-shorts-rear-zip-pocket.png",
+  "/public/images/products/sources/shorts.png",
   "/public/images/products/catalogue/danz-performance-tee-run-measure-improve.png",
   "/public/images/products/catalogue/danz-performance-tee-find-your-pace-then-break-it.png",
   "/public/images/products/catalogue/danz-performance-tee-run-better.png",

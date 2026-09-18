@@ -10,6 +10,15 @@
   let adminAccess = false;
   let contentError = false;
   let contentReady;
+  const galleryStore = new Map();
+  const newsletterDialog = document.querySelector("#newsletter-dialog");
+  const lightbox = document.querySelector("#image-lightbox");
+  const lightboxImage = document.querySelector("#lightbox-image");
+  const lightboxViewport = document.querySelector("#lightbox-viewport");
+  let lightboxImages = [];
+  let lightboxIndex = 0;
+  let lightboxZoom = 1;
+  let swipeStart = null;
 
   function escapeHtml(value) {
     const element = document.createElement("div");
@@ -24,6 +33,127 @@
   function setMeta(title, description = defaultDescription) {
     document.title = title;
     document.querySelector('meta[name="description"]').setAttribute("content", description);
+  }
+
+  function normalizeImages(images, fallbackAlt) {
+    return (images || []).map((image, index) => typeof image === "string"
+      ? { src: image, label: index ? `View ${index + 1}` : "Front + back", alt: fallbackAlt }
+      : {
+        src: image.src,
+        label: image.label || `View ${index + 1}`,
+        alt: image.alt || fallbackAlt,
+      });
+  }
+
+  function registerGallery(key, images, fallbackAlt) {
+    const normalized = normalizeImages(images, fallbackAlt);
+    galleryStore.set(key, normalized);
+    return normalized;
+  }
+
+  function updateModalScrollLock() {
+    requestAnimationFrame(() => {
+      document.body.classList.toggle("modal-open", Boolean(document.querySelector("dialog[open]")));
+    });
+  }
+
+  function renderLightbox() {
+    const image = lightboxImages[lightboxIndex];
+    if (!image) return;
+    lightboxImage.src = image.src;
+    lightboxImage.alt = image.alt;
+    lightboxImage.style.transform = `scale(${lightboxZoom})`;
+    lightboxViewport.classList.toggle("zoomed", lightboxZoom > 1);
+    document.querySelector("#lightbox-label").textContent = image.label;
+    document.querySelector("#lightbox-counter").textContent = `${lightboxIndex + 1} / ${lightboxImages.length}`;
+    document.querySelector("#lightbox-zoom-value").textContent = `${Math.round(lightboxZoom * 100)}%`;
+    document.querySelectorAll("[data-lightbox-previous], [data-lightbox-next]").forEach((button) => {
+      button.classList.toggle("hidden", lightboxImages.length < 2);
+    });
+    const thumbnails = document.querySelector("#lightbox-thumbnails");
+    thumbnails.innerHTML = lightboxImages.length > 1
+      ? lightboxImages.map((item, index) => `<button type="button" class="${index === lightboxIndex ? "active" : ""}" data-lightbox-thumbnail="${index}" aria-label="View ${escapeHtml(item.label)}"><img src="${escapeHtml(item.src)}" alt="" /><span>${escapeHtml(item.label)}</span></button>`).join("")
+      : "";
+    const activeThumbnail = thumbnails.querySelector(".active");
+    if (activeThumbnail) {
+      const centeredLeft = activeThumbnail.offsetLeft - thumbnails.offsetLeft - ((thumbnails.clientWidth - activeThumbnail.offsetWidth) / 2);
+      thumbnails.scrollLeft = Math.max(0, centeredLeft);
+    }
+  }
+
+  function openLightbox(key, index = 0) {
+    const images = galleryStore.get(key);
+    if (!images?.length) return;
+    lightboxImages = images;
+    lightboxIndex = Math.max(0, Math.min(Number(index) || 0, images.length - 1));
+    lightboxZoom = 1;
+    renderLightbox();
+    lightbox.showModal();
+    document.body.classList.add("modal-open");
+    lightbox.querySelector("[data-lightbox-close]").focus();
+  }
+
+  function moveLightbox(direction) {
+    if (lightboxImages.length < 2) return;
+    lightboxIndex = (lightboxIndex + direction + lightboxImages.length) % lightboxImages.length;
+    lightboxZoom = 1;
+    renderLightbox();
+  }
+
+  function setLightboxZoom(value) {
+    lightboxZoom = Math.max(1, Math.min(3, value));
+    renderLightbox();
+  }
+
+  function galleryMarkup(key, images) {
+    if (!images.length) return "";
+    const main = images[0];
+    return `<div class="product-gallery" data-product-gallery="${escapeHtml(key)}">
+      <button class="product-main-image" type="button" data-open-gallery="${escapeHtml(key)}" data-gallery-index="0" aria-label="Open ${escapeHtml(main.label)} image">
+        <img data-product-main-image src="${escapeHtml(main.src)}" alt="${escapeHtml(main.alt)}" />
+        <span class="image-action">View / zoom ↗</span>
+      </button>
+      ${images.length > 1 ? `<div class="product-thumbnails">${images.map((image, index) => `<button type="button" class="${index === 0 ? "active" : ""}" data-product-thumbnail="${index}" aria-label="Show ${escapeHtml(image.label)}"><img src="${escapeHtml(image.src)}" alt="" /><span>${escapeHtml(image.label)}</span></button>`).join("")}</div>` : ""}
+    </div>`;
+  }
+
+  async function submitNewsletter(form) {
+    const input = form.querySelector('input[name="email"]');
+    const message = form.querySelector("[data-newsletter-message]");
+    const button = form.querySelector('button[type="submit"]');
+    if (!input.validity.valid) {
+      message.textContent = "Enter a valid email address.";
+      input.focus();
+      return;
+    }
+    const endpoint = content.site.newsletter.endpoint;
+    if (!endpoint) {
+      message.textContent = "Run Weekly subscriptions are not live yet.";
+      return;
+    }
+    button.disabled = true;
+    button.dataset.label ||= button.textContent;
+    button.textContent = "Subscribing…";
+    message.textContent = "Adding you to Run Weekly…";
+    try {
+      const response = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: input.value.trim(),
+          website: form.querySelector('input[name="website"]')?.value || "",
+        }),
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(result.message || "We couldn't add you right now. Please try again shortly.");
+      message.textContent = "You're in. Run Weekly will land in your inbox.";
+      input.disabled = true;
+      button.textContent = "Subscribed ✓";
+    } catch (error) {
+      message.textContent = error.message;
+      button.disabled = false;
+      button.textContent = button.dataset.label;
+    }
   }
 
   function routePath() {
@@ -98,7 +228,7 @@
       <header class="editorial-header">
         <p class="eyebrow">Danz Run Weekly</p>
         <h1>Run Weekly</h1>
-        <p>One thing each week to help you run better.</p>
+        <div class="editorial-header-action"><p>One thing each week to help you run better.</p><button type="button" class="outline-button" data-open-newsletter>Get Run Weekly</button></div>
       </header>
       ${latest ? `<article class="latest-article">
         <div class="latest-number">W${latest.weekNumber}</div>
@@ -125,31 +255,8 @@
       </aside>
       <section class="newsletter-card">
         <div><p class="eyebrow">GET RUN WEEKLY</p><h2>One useful running idea. Once a week.</h2></div>
-        <form id="newsletter-form"><label>Email address<input type="email" required placeholder="runner@example.com" /></label><button type="submit">Subscribe →</button></form>
-        <p id="newsletter-message" role="status">${content.site.newsletter.status === "configured" ? "" : "Newsletter delivery is not yet connected."}</p>
+        <form class="newsletter-form" novalidate><label>Email address<input type="email" name="email" autocomplete="email" inputmode="email" required placeholder="runner@example.com" /></label><label class="newsletter-honeypot" aria-hidden="true">Website<input type="text" name="website" tabindex="-1" autocomplete="off" /></label><button type="submit">Subscribe →</button><p class="newsletter-message" data-newsletter-message role="status">${content.site.newsletter.status === "configured" ? "" : "MailerLite is ready to connect; subscriptions are not live yet."}</p></form>
       </section>`;
-    document.querySelector("#newsletter-form")?.addEventListener("submit", async (event) => {
-      event.preventDefault();
-      const message = document.querySelector("#newsletter-message");
-      const newsletter = content.site.newsletter;
-      if (newsletter.status !== "configured" || !newsletter.endpoint) {
-        message.textContent = "Subscriptions are not open yet. No email was submitted.";
-        return;
-      }
-      message.textContent = "Subscribing…";
-      try {
-        const response = await fetch(newsletter.endpoint, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email: event.currentTarget.querySelector('input[type="email"]').value }),
-        });
-        if (!response.ok) throw new Error("Subscription failed");
-        event.currentTarget.reset();
-        message.textContent = "You're subscribed to Run Weekly.";
-      } catch {
-        message.textContent = "Subscription could not be completed. Please try again later.";
-      }
-    });
     setMeta("Run Weekly | Danz", "One practical running lesson each week from Danz Run Lab.");
     showPage("run-weekly-page");
   }
@@ -224,9 +331,21 @@
 
   function renderShop() {
     const products = content.products.products.filter((product) => product.status === "published");
+    const cards = products.map((product) => {
+      const key = `product:${product.slug}`;
+      const images = registerGallery(key, product.images, product.name);
+      const image = images[0];
+      return `<article class="product-card">
+        <button class="product-card-image" type="button" data-open-gallery="${escapeHtml(key)}" data-gallery-index="0" aria-label="Open image of ${escapeHtml(product.name)}">
+          <img src="${escapeHtml(image.src)}" alt="${escapeHtml(image.alt)}" />
+          <span class="image-action">View ↗</span>
+        </button>
+        <a data-route href="/shop/${encodeURIComponent(product.slug)}"><p>${escapeHtml(product.category)}</p><h2>${escapeHtml(product.name)}</h2><span>${escapeHtml(product.priceDisplay)}</span></a>
+      </article>`;
+    }).join("");
     document.querySelector("#shop-content").innerHTML = `
       <header class="editorial-header"><p class="eyebrow">Danz Shop</p><h1>Run in Danz.</h1><p>Original Danz merchandise, using the approved designs exactly as created.</p></header>
-      ${products.length ? `<div class="product-grid">${products.map((product) => `<a class="product-card" data-route href="/shop/${encodeURIComponent(product.slug)}"><img src="${escapeHtml(product.images[0])}" alt="${escapeHtml(product.name)}" /><p>${escapeHtml(product.category)}</p><h2>${escapeHtml(product.name)}</h2><span>${escapeHtml(product.priceDisplay)}</span></a>`).join("")}</div>` : `<div class="empty-state shop-empty"><strong>No products are published yet.</strong><p>Approved Danz merchandise will appear here when its product record is published.</p></div>`}`;
+      ${products.length ? `<div class="product-grid">${cards}</div>` : `<div class="empty-state shop-empty"><strong>No products are published yet.</strong><p>Approved Danz merchandise will appear here when its product record is published.</p></div>`}`;
     setMeta("Shop | Danz", "Shop approved Danz running merchandise designs.");
     showPage("shop-page");
   }
@@ -234,7 +353,12 @@
   function renderProduct(slug) {
     const product = content.products.products.find((item) => item.slug === slug && item.status === "published");
     if (!product) return renderNotFound();
-    document.querySelector("#product-content").innerHTML = `<a class="back-link" data-route href="/shop">← Shop</a><article class="product-detail"><div class="product-gallery">${product.images.map((image) => `<img src="${escapeHtml(image)}" alt="${escapeHtml(product.name)}" />`).join("")}</div><div><p class="eyebrow">${escapeHtml(product.category)}</p><h1>${escapeHtml(product.name)}</h1><p>${escapeHtml(product.description)}</p><strong>${escapeHtml(product.priceDisplay)}</strong></div></article>`;
+    const key = `product:${product.slug}`;
+    const images = registerGallery(key, product.images, product.name);
+    const features = product.features?.length
+      ? `<section class="product-features"><p class="eyebrow">KEY FEATURES</p><ul>${product.features.map((feature) => `<li>${escapeHtml(feature)}</li>`).join("")}</ul></section>`
+      : "";
+    document.querySelector("#product-content").innerHTML = `<a class="back-link" data-route href="/shop">← Shop</a><article class="product-detail">${galleryMarkup(key, images)}<div class="product-copy"><p class="eyebrow">${escapeHtml(product.category)}</p><h1>${escapeHtml(product.name)}</h1><p>${escapeHtml(product.description)}</p><strong>${escapeHtml(product.priceDisplay)}</strong>${features}</div></article>`;
     setMeta(`${product.name} | Danz Shop`, product.description);
     showPage("product-page");
   }
@@ -249,7 +373,9 @@
   function renderRunSpot(slug) {
     const spot = content.spots.spots.find((item) => item.slug === slug && item.status === "published");
     if (!spot) return renderNotFound();
-    document.querySelector("#run-spot-content").innerHTML = `<a class="back-link" data-route href="/run-spots">← Run Spots</a><article class="spot-detail"><p class="eyebrow">${escapeHtml(spot.location)}</p><h1>${escapeHtml(spot.name)}</h1><p>${escapeHtml(spot.description)}</p></article>`;
+    const key = `spot:${spot.slug}`;
+    const images = registerGallery(key, spot.images || [], spot.name);
+    document.querySelector("#run-spot-content").innerHTML = `<a class="back-link" data-route href="/run-spots">← Run Spots</a><article class="spot-detail"><p class="eyebrow">${escapeHtml(spot.location)}</p><h1>${escapeHtml(spot.name)}</h1><p>${escapeHtml(spot.description)}</p>${images.length ? galleryMarkup(key, images) : ""}</article>`;
     setMeta(`${spot.name} | Danz Run Spots`, spot.description);
     showPage("run-spot-page");
   }
@@ -308,6 +434,94 @@
     event.preventDefault();
     navigate(link.getAttribute("href"));
   });
+
+  document.addEventListener("click", (event) => {
+    const newsletterButton = event.target.closest("[data-open-newsletter]");
+    if (newsletterButton) {
+      newsletterDialog.showModal();
+      document.body.classList.add("modal-open");
+      newsletterDialog.querySelector('input[name="email"]').focus();
+      return;
+    }
+    if (event.target.closest("[data-close-newsletter]")) {
+      newsletterDialog.close();
+      return;
+    }
+
+    const productThumbnail = event.target.closest("[data-product-thumbnail]");
+    if (productThumbnail) {
+      const gallery = productThumbnail.closest("[data-product-gallery]");
+      const key = gallery.dataset.productGallery;
+      const images = galleryStore.get(key);
+      const index = Number(productThumbnail.dataset.productThumbnail);
+      const image = images?.[index];
+      if (!image) return;
+      const mainButton = gallery.querySelector("[data-open-gallery]");
+      const mainImage = gallery.querySelector("[data-product-main-image]");
+      mainButton.dataset.galleryIndex = index;
+      mainButton.setAttribute("aria-label", `Open ${image.label} image`);
+      mainImage.src = image.src;
+      mainImage.alt = image.alt;
+      gallery.querySelectorAll("[data-product-thumbnail]").forEach((button) => button.classList.toggle("active", button === productThumbnail));
+      return;
+    }
+
+    const galleryButton = event.target.closest("[data-open-gallery]");
+    if (galleryButton) {
+      openLightbox(galleryButton.dataset.openGallery, galleryButton.dataset.galleryIndex);
+      return;
+    }
+    if (event.target.closest("[data-lightbox-close]")) return lightbox.close();
+    if (event.target.closest("[data-lightbox-previous]")) return moveLightbox(-1);
+    if (event.target.closest("[data-lightbox-next]")) return moveLightbox(1);
+    if (event.target.closest("[data-lightbox-zoom-out]")) return setLightboxZoom(lightboxZoom - 0.5);
+    if (event.target.closest("[data-lightbox-zoom-in]")) return setLightboxZoom(lightboxZoom + 0.5);
+    const lightboxThumbnail = event.target.closest("[data-lightbox-thumbnail]");
+    if (lightboxThumbnail) {
+      lightboxIndex = Number(lightboxThumbnail.dataset.lightboxThumbnail);
+      lightboxZoom = 1;
+      renderLightbox();
+    }
+  });
+
+  document.addEventListener("submit", (event) => {
+    if (!event.target.matches(".newsletter-form")) return;
+    event.preventDefault();
+    submitNewsletter(event.target);
+  });
+
+  [newsletterDialog, lightbox].forEach((dialog) => {
+    dialog.addEventListener("click", (event) => {
+      if (event.target === dialog) dialog.close();
+    });
+    dialog.addEventListener("close", updateModalScrollLock);
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (!lightbox.open) return;
+    if (event.key === "ArrowLeft") moveLightbox(-1);
+    if (event.key === "ArrowRight") moveLightbox(1);
+    if (event.key === "+" || event.key === "=") setLightboxZoom(lightboxZoom + 0.5);
+    if (event.key === "-") setLightboxZoom(lightboxZoom - 0.5);
+  });
+
+  lightboxImage.addEventListener("dblclick", () => setLightboxZoom(lightboxZoom === 1 ? 2 : 1));
+  lightboxViewport.addEventListener("touchstart", (event) => {
+    const touch = event.touches[0];
+    swipeStart = { x: touch.clientX, y: touch.clientY };
+  }, { passive: true });
+  lightboxViewport.addEventListener("touchend", (event) => {
+    if (!swipeStart) return;
+    if (lightboxZoom > 1) {
+      swipeStart = null;
+      return;
+    }
+    const touch = event.changedTouches[0];
+    const deltaX = touch.clientX - swipeStart.x;
+    const deltaY = touch.clientY - swipeStart.y;
+    swipeStart = null;
+    if (Math.abs(deltaX) > 50 && Math.abs(deltaX) > Math.abs(deltaY)) moveLightbox(deltaX < 0 ? 1 : -1);
+  }, { passive: true });
   addEventListener("popstate", renderCurrentRoute);
 
   contentReady = loadContent().catch((error) => {

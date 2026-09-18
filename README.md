@@ -24,6 +24,8 @@ Danz Run Lab is a lightweight running pace planner, practical running publicatio
 - Run Weekly editorial homepage, topic filters, automatic archive, and article pages
 - Building Danz product vision, milestone timeline, and media-ready development log
 - Data-driven Shop and Run Spots routes
+- Full-screen, keyboard- and touch-friendly merchandise galleries
+- Secure MailerLite newsletter endpoint, ready for server-side credentials
 
 ## Public routes
 
@@ -70,17 +72,29 @@ Only document work that happened. Updates are sorted newest-first automatically.
 
 Product records belong in [`content/products.json`](content/products.json). Product components read their image paths from that data rather than hardcoding them.
 
-The four untouched approved catalogue sheets are preserved byte-for-byte under `public/images/products/sources/`. The 12 product crops used by the Shop are under `public/images/products/catalogue/`. They are direct, unscaled crops from the approved sources; no logos, typography, colours, slogans, or garment artwork were redesigned.
+The approved catalogue sheets are preserved byte-for-byte under `public/images/products/sources/`. The 12 shirt crops used by the Shop are under `public/images/products/catalogue/`. They are direct, unscaled crops from the approved sources; no logos, typography, colours, slogans, or garment artwork were redesigned.
 
-All 12 requested products are mapped. Prices, variants, inventory, cart, and checkout remain intentionally unconfigured; the catalogue says `Coming soon` rather than inventing commerce data.
+The approved shorts sheet is preserved at `public/images/products/sources/shorts.png`. Six direct, unscaled product/detail crops are under `public/images/products/shorts/` and mapped by the `Danz 2-in-1 Running Shorts` record in `content/products.json`. Its gallery includes the main front/back view, separate front and back views, compression liner, phone pocket, rear zip pocket, and original specification sheet.
+
+All 13 products are mapped. Product images open in a reusable full-screen viewer with previous/next controls, thumbnails, keyboard navigation, mobile swipe, and zoom controls. The same gallery renderer is ready for future Run Spot `images` data. Prices, variants, inventory, cart, and checkout remain intentionally unconfigured; the catalogue says `Coming soon` rather than inventing commerce data.
 
 ### Run Spots
 
 Verified locations can be added to the `spots` array in [`content/run-spots.json`](content/run-spots.json). The list is intentionally empty until real route details are available.
 
-### Newsletter preparation
+### Newsletter subscription
 
-The subscription UI is intentionally non-operational and clearly says so. No email is captured or sent. Configure a provider such as Buttondown, Mailchimp, ConvertKit, or a Supabase Edge Function, then add a secure subscription endpoint before changing `content/site.json` from `not-configured`. Any provider secret must remain server-side; never put it in this static frontend.
+The Run Weekly forms post to the Vercel serverless function at `api/subscribe.js`; provider credentials are never sent to the browser. MailerLite is the prepared provider because it only requires one API call and supports double opt-in for API subscribers.
+
+To activate subscriptions:
+
+1. Create a MailerLite account and a **Run Weekly** subscriber group.
+2. In MailerLite, enable **Double opt-in for API** under subscriber settings.
+3. Create an API token.
+4. Add `MAILERLITE_API_KEY` and `MAILERLITE_GROUP_ID` to the Vercel project for Production, Preview, and Development as appropriate.
+5. Change `newsletter.status` in `content/site.json` from `awaiting-credentials` to `configured` and redeploy.
+
+Until those credentials are present, the endpoint returns a clear `503 newsletter_not_configured` response and the interface honestly says subscriptions are not live. No email is captured or sent in that state.
 
 ## Run locally
 
@@ -106,7 +120,10 @@ Submitting a pace plan sends the runner name, session date, distance, and target
 2. In **Authentication → URL Configuration**, set the Site URL and redirect URL to `https://danzrunlab.com/`.
 3. Use `asimango@gmail.com` in the app's **Admin login** dialog.
 
-The Supabase URL and publishable browser key are in `supabase-config.js`; no private Supabase service key is used by the frontend. There are currently no additional environment variables. A future newsletter endpoint/provider may require server-side environment variables defined by that provider.
+The Supabase URL and publishable browser key are in `supabase-config.js`; no private Supabase service key is used by the frontend. Newsletter activation requires these server-side Vercel environment variables:
+
+- `MAILERLITE_API_KEY`
+- `MAILERLITE_GROUP_ID`
 
 ## Technology
 
