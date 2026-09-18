@@ -182,10 +182,10 @@ async function migrateLegacySessions() {
 async function setAdminMode(enabled) {
   isAdmin = enabled;
   document.querySelectorAll(".admin-only").forEach((element) => element.classList.toggle("hidden", !enabled));
-  document.querySelector("#admin-access").textContent = enabled ? "Sign out" : "Admin login";
+  document.querySelector("#admin-access").textContent = enabled ? "Admin" : "Admin login";
+  window.DanzSite.setAdminAccess(enabled);
   if (!enabled) {
     sessionsCache = [];
-    showView("plan");
     renderAllData();
     return;
   }
@@ -319,11 +319,12 @@ function renderAllData() {
   renderInsights();
 }
 
-function showView(viewName) {
+function showAdminView(viewName) {
   if (viewName !== "plan" && !isAdmin) return;
-  document.querySelectorAll(".tab, .view").forEach((element) => element.classList.remove("active"));
-  document.querySelector(`.tab[data-view="${viewName}"]`).classList.add("active");
-  document.querySelector(`#${viewName}`).classList.add("active");
+  window.DanzSite.showPage(viewName);
+  document.querySelectorAll("[data-admin-view]").forEach((button) => {
+    button.classList.toggle("active", button.dataset.adminView === viewName);
+  });
 }
 
 function openSessionEditor(id, completing = false) {
@@ -467,15 +468,22 @@ document.querySelector("#share-plan").addEventListener("click", () => {
   shareSession({ ...plan, runner: runnerName.value.trim() || "Runner", date: sessionDate.value });
 });
 
-document.querySelectorAll(".tab").forEach((tab) => tab.addEventListener("click", () => showView(tab.dataset.view)));
 document.querySelector("#admin-access").addEventListener("click", async () => {
   if (isAdmin) {
-    await supabaseClient.auth.signOut();
-    showToast("Signed out.");
+    window.DanzSite.navigate("/admin");
     return;
   }
   document.querySelector("#admin-message").textContent = "";
   adminDialog.showModal();
+});
+document.querySelectorAll("[data-admin-view]").forEach((button) => {
+  button.addEventListener("click", () => showAdminView(button.dataset.adminView));
+});
+document.querySelectorAll("[data-admin-signout]").forEach((button) => {
+  button.addEventListener("click", async () => {
+    await supabaseClient.auth.signOut();
+    showToast("Signed out.");
+  });
 });
 document.querySelector("#close-admin-dialog").addEventListener("click", () => adminDialog.close());
 adminDialog.addEventListener("click", (event) => {

@@ -1,0 +1,13 @@
+{
+  "title": "Building the Danz Pacer",
+  "summary": "We're exploring a simple question: Can technology make it easier for runners to train at the pace they actually intended?",
+  "stages": [
+    { "name": "IDEA", "status": "In progress" },
+    { "name": "RUNNER RESEARCH", "status": "Not started" },
+    { "name": "ENGINEERING", "status": "Not started" },
+    { "name": "PROTOTYPE", "status": "Not started" },
+    { "name": "TESTING", "status": "Not started" },
+    { "name": "PILOT", "status": "Not started" }
+  ],
+  "updates": []
+}

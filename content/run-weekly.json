@@ -1,0 +1,55 @@
+{
+  "topics": ["PACING", "TRAINING", "STRENGTH", "NUTRITION", "RECOVERY", "RACE DAY", "COMMUNITY", "RUNNING TECH"],
+  "articles": [
+    {
+      "id": "rw-2026-38",
+      "slug": "how-to-stop-starting-your-runs-too-fast",
+      "title": "How to Stop Starting Your Runs Too Fast",
+      "weekNumber": 38,
+      "publishedDate": "2026-09-18",
+      "month": "SEPTEMBER",
+      "year": 2026,
+      "excerpt": "A practical way to settle into the pace you planned instead of spending the rest of the run paying for a fast first kilometre.",
+      "category": "PACING",
+      "heroImage": null,
+      "readingTime": "4 min read",
+      "author": "Danz",
+      "seoTitle": "How to Stop Starting Runs Too Fast | Danz Run Weekly",
+      "seoDescription": "Learn a simple pacing routine that helps you control the opening minutes of easy runs, tempo sessions, and races.",
+      "featured": true,
+      "status": "published",
+      "body": [
+        {
+          "heading": "THE PROBLEM",
+          "paragraphs": [
+            "The first few minutes of a run often feel unusually easy. Your legs are fresh, your breathing is calm and the excitement of getting started can make a pace feel more comfortable than it really is. That is why runners often cover the opening kilometre faster than planned without making a conscious decision to do so.",
+            "The mistake is especially common in group runs, races and tempo sessions. You match the movement around you, see a quick number on the watch and tell yourself it will settle down. Sometimes it does. Often the early effort has already changed the rest of the run."
+          ]
+        },
+        {
+          "heading": "WHY IT MATTERS",
+          "paragraphs": [
+            "Pace is not only a number; it changes the cost of the session. An easy run that begins too quickly can drift into moderate work and add fatigue you did not plan for. A tempo run can become a survival exercise instead of controlled, repeatable training. In a race, a fast opening can use energy that would have been more valuable in the final third.",
+            "The problem compounds because the body does not send the bill immediately. A pace that is slightly too fast may feel fine for ten minutes before breathing rises and the legs begin to tighten. By then, slowing down can feel like failure even though it is the sensible correction. Starting under control gives the session room to develop instead of forcing you to negotiate with fatigue from the beginning."
+          ]
+        },
+        {
+          "heading": "WHAT TO DO",
+          "paragraphs": [
+            "Decide what the first kilometre is for before you start. On an easy run, it is a transition from standing still to running comfortably. On a workout, it is the approach to the work rather than the work itself. Give that opening section its own target: relaxed effort, quiet breathing and a pace slightly slower than the main session.",
+            "Use effort before chasing an instant pace reading. GPS pace can jump around when you first start, particularly near buildings, trees or turns. Check your posture and breathing first. Your shoulders should feel loose, your stride should feel unforced and you should be able to resist the urge to push. If you use a watch, look at lap pace or average pace after a few minutes rather than reacting to every fluctuation.",
+            "When the planned pace begins, move towards it gradually. Do not accelerate sharply to correct a slow opening. Let the next few hundred metres bring you onto target. During a race, allow people to pass in the first minute. Most of them are following their own plan—or no plan at all. Their pace does not need to become yours."
+          ]
+        },
+        {
+          "heading": "TRY THIS THIS WEEK",
+          "paragraphs": [
+            "Choose one run and make the first ten minutes deliberately controlled. Start at a pace that feels almost too patient. Keep your watch on a simple lap screen, and do not make a pace correction during the first three minutes. After ten minutes, ask one question: could I smoothly increase from here if the session required it?",
+            "At the end, compare how you felt in the final third with a run that started faster. The goal is not to make every opening slow. It is to develop the confidence to choose your pace instead of letting the opening excitement choose it for you."
+          ]
+        }
+      ],
+      "quickTakeaway": "Treat the opening minutes as part of the plan. Begin under control, trust effort before unstable GPS pace, and move gradually towards your target."
+    }
+  ]
+}

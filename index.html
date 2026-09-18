@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <base href="/" />
     <meta name="theme-color" content="#f4f1e8" />
     <meta name="description" content="Plan precise running paces, track results, and follow your progress." />
     <title>Danz Run Lab</title>
@@ -16,7 +17,7 @@
   <body>
     <div class="noise" aria-hidden="true"></div>
     <header class="site-header">
-      <a class="brand" href="#" aria-label="Danz Run Lab home">
+      <a class="brand" data-route href="/" aria-label="Danz Run Lab home">
         <span class="brand-mark">D</span>
         <span>Danz <em>Run Lab</em></span>
       </a>
@@ -29,9 +30,10 @@
 
     <main>
       <nav class="tabs" aria-label="Main navigation">
-        <button class="tab active" data-view="plan">Plan a run</button>
-        <button class="tab admin-only hidden" data-view="sessions">Sessions <span id="session-count">0</span></button>
-        <button class="tab admin-only hidden" data-view="insights">Insights</button>
+        <a class="tab active" data-route href="/">Plan a run</a>
+        <a class="tab" data-route href="/run-spots">Run spots</a>
+        <a class="tab" data-route href="/shop">Shop</a>
+        <a class="tab" data-route href="/run-weekly">Run Weekly</a>
       </nav>
 
       <section id="plan" class="view active">
@@ -99,9 +101,34 @@
             <p id="form-message" class="form-message" role="status"></p>
           </aside>
         </div>
+
+        <aside class="building-teaser">
+          <div>
+            <p class="eyebrow">Building Danz</p>
+            <h2>Can a physical pacer help runners train at the pace they intended?</h2>
+          </div>
+          <div>
+            <p>Follow the idea from runner research to prototype—honestly, as we test and learn.</p>
+            <a class="arrow-link" data-route href="/building-danz">Follow the build →</a>
+          </div>
+        </aside>
       </section>
 
+      <section id="run-spots-page" class="view route-page"><div id="run-spots-content"></div></section>
+      <section id="run-spot-page" class="view route-page"><div id="run-spot-content"></div></section>
+      <section id="shop-page" class="view route-page"><div id="shop-content"></div></section>
+      <section id="product-page" class="view route-page"><div id="product-content"></div></section>
+      <section id="run-weekly-page" class="view route-page"><div id="run-weekly-content"></div></section>
+      <section id="article-page" class="view route-page"><div id="article-content"></div></section>
+      <section id="building-danz-page" class="view route-page"><div id="building-danz-content"></div></section>
+      <section id="not-found-page" class="view route-page"><div id="not-found-content"></div></section>
+
       <section id="sessions" class="view">
+        <nav class="admin-nav" aria-label="Admin navigation">
+          <button class="active" type="button" data-admin-view="sessions">Sessions <span id="session-count">0</span></button>
+          <button type="button" data-admin-view="insights">Insights</button>
+          <button type="button" data-admin-signout>Sign out</button>
+        </nav>
         <div class="section-title"><div><p class="eyebrow">THE RUN LIST</p><h1>Your sessions.</h1></div><p>Every target becomes a plan. Every finish becomes data.</p></div>
         <div class="session-toolbar">
           <p><strong id="completed-count">0</strong> completed runs · <span id="sync-state">Cloud synced</span></p>
@@ -115,6 +142,11 @@
       </section>
 
       <section id="insights" class="view">
+        <nav class="admin-nav" aria-label="Admin navigation">
+          <button type="button" data-admin-view="sessions">Sessions</button>
+          <button class="active" type="button" data-admin-view="insights">Insights</button>
+          <button type="button" data-admin-signout>Sign out</button>
+        </nav>
         <div class="section-title"><div><p class="eyebrow">PROGRESS SIGNALS</p><h1>Your running story.</h1></div><p>Targets, finishes, and personal bests from every completed run.</p></div>
         <div class="insight-grid">
           <article class="insight-card lime"><span>Sessions planned</span><strong id="total-sessions">0</strong><small>all time</small></article>
@@ -169,9 +201,10 @@
 
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
-    <footer><span>Danz Run Lab © 2026</span><span>Built for the next finish line.</span></footer>
+    <footer><span>Danz Run Lab © 2026 · A STAINAZ company</span><span>Built for the next finish line.</span></footer>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="supabase-config.js"></script>
+    <script src="site.js"></script>
     <script src="app.js"></script>
   </body>
 </html>

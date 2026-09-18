@@ -1,0 +1,9 @@
+{
+  "rewrites": [
+    { "source": "/run-weekly/:path*", "destination": "/index.html" },
+    { "source": "/building-danz", "destination": "/index.html" },
+    { "source": "/shop/:path*", "destination": "/index.html" },
+    { "source": "/run-spots/:path*", "destination": "/index.html" },
+    { "source": "/admin", "destination": "/index.html" }
+  ]
+}

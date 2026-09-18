@@ -1,0 +1,7 @@
+{
+  "newsletter": {
+    "provider": null,
+    "endpoint": null,
+    "status": "not-configured"
+  }
+}
