@@ -1,10 +1,10 @@
-# DANZ Run Lab
+# Danz Run Lab
 
-DANZ Run Lab is a lightweight running pace planner and progress tracker. Choose a distance and target finish time to generate a precise target pace, speed, and kilometre-by-kilometre split plan.
+Danz Run Lab is a lightweight running pace planner and progress tracker. Choose a distance and target finish time to generate a precise target pace, speed, and kilometre-by-kilometre split plan.
 
-[Open DANZ Run Lab](https://danzrunlab.com/)
+[Open Danz Run Lab](https://danzrunlab.com/)
 
-![DANZ Run Lab progress dashboard](progress.png)
+![Danz Run Lab progress dashboard](progress.png)
 
 ## Features
 
@@ -38,7 +38,7 @@ Open the live site in a supported browser and choose **Install app**. Once insta
 
 ## Privacy
 
-Submitting a pace plan sends the runner name, session date, distance, and target time to the DANZ Run Lab Supabase project. Row-Level Security prevents public reads; only the configured administrator can access Sessions and Insights. Offline submissions remain on the device until they can synchronize.
+Submitting a pace plan sends the runner name, session date, distance, and target time to the Danz Run Lab Supabase project. Row-Level Security prevents public reads; only the configured administrator can access Sessions and Insights. Offline submissions remain on the device until they can synchronize.
 
 ## Supabase setup
 

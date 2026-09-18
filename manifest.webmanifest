@@ -1,6 +1,6 @@
 {
-  "name": "DANZ Run Lab",
-  "short_name": "DANZ",
+  "name": "Danz Run Lab",
+  "short_name": "Danz",
   "description": "Plan precise running paces and track every finish.",
   "start_url": "./",
   "scope": "./",

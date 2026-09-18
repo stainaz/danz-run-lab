@@ -365,7 +365,7 @@ function planUrl(session) {
 async function shareSession(session) {
   if (!session) return;
   const url = planUrl(session);
-  const data = { title: "DANZ Run Lab pace plan", text: `${session.runner}'s ${distanceName(session.distance)} target: ${formatDuration(session.totalSeconds)}`, url };
+  const data = { title: "Danz Run Lab pace plan", text: `${session.runner}'s ${distanceName(session.distance)} target: ${formatDuration(session.totalSeconds)}`, url };
   try {
     if (navigator.share) await navigator.share(data);
     else {
@@ -456,7 +456,7 @@ document.querySelector("#save-session").addEventListener("click", async () => {
   message.textContent = "Submitting your session…";
   const synced = await submitSession(session);
   message.textContent = synced
-    ? "Pace submitted. The DANZ team can now see your session."
+    ? "Pace submitted. The Danz team can now see your session."
     : "Saved on this device. It will submit automatically when the connection is ready.";
   if (isAdmin && synced) await refreshAdminData();
 });
@@ -571,7 +571,7 @@ document.querySelector("#install-app").addEventListener("click", async () => {
   installPrompt = null;
   document.querySelector("#install-app").classList.add("hidden");
 });
-window.addEventListener("appinstalled", () => showToast("DANZ Run Lab installed."));
+window.addEventListener("appinstalled", () => showToast("Danz Run Lab installed."));
 window.addEventListener("online", async () => {
   await syncPendingSessions();
   if (isAdmin) await refreshAdminData();
