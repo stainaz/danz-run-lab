@@ -72,11 +72,9 @@ Only document work that happened. Updates are sorted newest-first automatically.
 
 Product records belong in [`content/products.json`](content/products.json). Product components read their image paths from that data rather than hardcoding them.
 
-The approved catalogue sheets are preserved byte-for-byte under `public/images/products/sources/`. The 12 shirt crops used by the Shop are under `public/images/products/catalogue/`. They are direct, unscaled crops from the approved sources; no logos, typography, colours, slogans, or garment artwork were redesigned.
+The Shop currently publishes only the two approved complete product sheets supplied for the Danz Run Lab Performance Tee and Danz Run Lab 2-in-1 Running Shorts. They are preserved byte-for-byte as `public/images/products/danz-run-lab-performance-tee.png` and `public/images/products/danz-run-lab-2-in-1-running-shorts.png`; no artwork was cropped, redrawn, or replaced.
 
-The approved shorts sheet is preserved at `public/images/products/sources/shorts.png`. Six direct, unscaled product/detail crops are under `public/images/products/shorts/` and mapped by the `Danz 2-in-1 Running Shorts` record in `content/products.json`. Its gallery includes the main front/back view, separate front and back views, compression liner, phone pocket, rear zip pocket, and original specification sheet.
-
-All 13 products are mapped. Product images open in a reusable full-screen viewer with previous/next controls, thumbnails, keyboard navigation, mobile swipe, and zoom controls. The same gallery renderer is ready for future Run Spot `images` data. Prices, variants, inventory, cart, and checkout remain intentionally unconfigured; the catalogue says `Coming soon` rather than inventing commerce data.
+Both product images open in the reusable full-screen viewer with keyboard, touch, and zoom controls. The same gallery renderer is ready for future Run Spot `images` data. Prices, variants, inventory, cart, and checkout remain intentionally unconfigured; the catalogue says `Coming soon` rather than inventing commerce data.
 
 ### Run Spots
 

@@ -279,11 +279,14 @@ a { color: inherit; }
 .build-media img, .build-media video { width: 100%; }
 
 /* Shop, run spots, admin and utility states */
-.product-grid, .spot-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; padding: 40px 0 90px; }
+.product-grid, .spot-grid { display: grid; gap: 14px; padding: 40px 0 90px; }
+.product-grid { grid-template-columns: repeat(2, 1fr); }
+.spot-grid { grid-template-columns: repeat(3, 1fr); }
+.shop-header { grid-template-columns: 1fr; }
 .product-card, .spot-card { text-decoration: none; }
 .product-card > a { display: block; text-decoration: none; }
 .product-card-image, .product-main-image { position: relative; width: 100%; padding: 0; border: 0; background: white; cursor: zoom-in; overflow: hidden; }
-.product-card-image img { display: block; width: 100%; aspect-ratio: 3 / 4; object-fit: contain; background: white; transition: transform .3s ease; }
+.product-card-image img { display: block; width: 100%; aspect-ratio: 6 / 5; object-fit: contain; background: white; transition: transform .3s ease; }
 .product-card-image:hover img { transform: scale(1.018); }
 .image-action { position: absolute; right: 12px; bottom: 12px; padding: 7px 9px; background: var(--ink); color: var(--lime); opacity: 0; transform: translateY(5px); transition: .2s ease; font: 500 9px "DM Mono", monospace; text-transform: uppercase; }
 .product-card-image:hover .image-action, .product-card-image:focus-visible .image-action, .product-main-image:hover .image-action, .product-main-image:focus-visible .image-action { opacity: 1; transform: translateY(0); }

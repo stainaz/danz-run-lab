@@ -1,186 +1,52 @@
 {
   "products": [
     {
-      "id": "danz-2-in-1-running-shorts",
-      "slug": "2-in-1-running-shorts",
-      "name": "Danz 2-in-1 Running Shorts",
-      "category": "Running Shorts",
-      "description": "Approved Danz 2-in-1 running shorts with a lightweight quick-dry outer shell and supportive compression inner liner.",
+      "id": "danz-run-lab-performance-tee",
+      "slug": "run-lab-performance-tee",
+      "name": "Danz Run Lab Performance Tee",
+      "category": "Performance Tee",
+      "description": "The approved Danz Run Lab performance tee with lightweight, breathable and quick-dry construction made for runners.",
       "images": [
         {
-          "src": "/public/images/products/shorts/danz-shorts-main-front-back.png",
-          "label": "Main view",
-          "alt": "Front and back views of the approved Danz 2-in-1 Running Shorts"
-        },
-        {
-          "src": "/public/images/products/shorts/danz-shorts-front.png",
-          "label": "Front",
-          "alt": "Front view of the approved Danz 2-in-1 Running Shorts"
-        },
-        {
-          "src": "/public/images/products/shorts/danz-shorts-back.png",
-          "label": "Back",
-          "alt": "Back view of the approved Danz 2-in-1 Running Shorts"
-        },
-        {
-          "src": "/public/images/products/shorts/danz-shorts-compression-liner.png",
-          "label": "Compression liner",
-          "alt": "Compression inner liner detail on the approved Danz running shorts"
-        },
-        {
-          "src": "/public/images/products/shorts/danz-shorts-phone-pocket.png",
-          "label": "Phone pocket",
-          "alt": "Phone pocket in the inner liner of the approved Danz running shorts"
-        },
-        {
-          "src": "/public/images/products/shorts/danz-shorts-rear-zip-pocket.png",
-          "label": "Rear zip pocket",
-          "alt": "Rear zip pocket detail on the approved Danz running shorts"
-        },
-        {
-          "src": "/public/images/products/sources/shorts.png",
-          "label": "Specification sheet",
-          "alt": "Full approved specification sheet for the Danz 2-in-1 Running Shorts"
+          "src": "/public/images/products/danz-run-lab-performance-tee.png",
+          "label": "Front and back",
+          "alt": "Approved Danz Run Lab Performance Tee showing the front and back designs"
         }
       ],
       "features": [
-        "Lightweight quick-dry outer shell",
-        "Compression inner liner",
-        "Phone pocket in inner liner",
-        "Rear zip pocket",
-        "Drawstring waist",
-        "Breathable running construction",
-        "Small minimal Danz branding"
+        "Lightweight fabric",
+        "Breathable construction",
+        "Quick-dry performance",
+        "Made for runners"
       ],
       "priceDisplay": "Coming soon",
       "status": "published"
     },
     {
-      "id": "danz-performance-tee-run-measure-improve",
-      "slug": "performance-tee-run-measure-improve",
-      "name": "Danz Performance Tee — Run. Measure. Improve.",
-      "category": "Performance Tee",
-      "description": "The approved Danz Run. Measure. Improve. design, shown with its original front and back catalogue artwork.",
-      "images": ["/public/images/products/catalogue/danz-performance-tee-run-measure-improve.png"],
-      "priceDisplay": "Coming soon",
-      "status": "published"
-    },
-    {
-      "id": "danz-performance-tee-find-your-pace-then-break-it",
-      "slug": "performance-tee-find-your-pace-then-break-it",
-      "name": "Danz Performance Tee — Find Your Pace. Then Break It.",
-      "category": "Performance Tee",
-      "description": "The approved Danz Find Your Pace. Then Break It. design, shown with its original front and back catalogue artwork.",
-      "images": ["/public/images/products/catalogue/danz-performance-tee-find-your-pace-then-break-it.png"],
-      "priceDisplay": "Coming soon",
-      "status": "published"
-    },
-    {
-      "id": "danz-performance-tee-run-better",
-      "slug": "performance-tee-run-better",
-      "name": "Danz Performance Tee — Run Better.",
-      "category": "Performance Tee",
-      "description": "The approved Danz Run Better. design, shown with its original front and back catalogue artwork.",
-      "images": ["/public/images/products/catalogue/danz-performance-tee-run-better.png"],
-      "priceDisplay": "Coming soon",
-      "status": "published"
-    },
-    {
-      "id": "danz-performance-tee-how-fast-can-you-become",
-      "slug": "performance-tee-how-fast-can-you-become",
-      "name": "Danz Performance Tee — How Fast Can You Become?",
-      "category": "Performance Tee",
-      "description": "The approved Danz How Fast Can You Become? design, shown with its original front and back catalogue artwork.",
-      "images": ["/public/images/products/catalogue/danz-performance-tee-how-fast-can-you-become.png"],
-      "priceDisplay": "Coming soon",
-      "status": "published"
-    },
-    {
-      "id": "danz-performance-tee-chase-your-next-pb",
-      "slug": "performance-tee-chase-your-next-pb",
-      "name": "Danz Performance Tee — Chase Your Next PB.",
-      "category": "Performance Tee",
-      "description": "The approved Danz Chase Your Next PB. design, shown with its original front and back catalogue artwork.",
-      "images": ["/public/images/products/catalogue/danz-performance-tee-chase-your-next-pb.png"],
-      "priceDisplay": "Coming soon",
-      "status": "published"
-    },
-    {
-      "id": "danz-performance-tee-whats-your-number",
-      "slug": "performance-tee-whats-your-number",
-      "name": "Danz Performance Tee — What’s Your Number?",
-      "category": "Performance Tee",
-      "description": "The approved white Danz What’s Your Number? design, shown with its original front and back catalogue artwork.",
-      "images": ["/public/images/products/catalogue/danz-performance-tee-whats-your-number.png"],
-      "priceDisplay": "Coming soon",
-      "status": "published"
-    },
-    {
-      "id": "danz-founding-runner-001",
-      "slug": "founding-runner-001",
-      "name": "Danz Founding Runner 001",
-      "category": "Founding Runner",
-      "description": "The approved Danz Founding Runner 001 design, shown with its original front and back catalogue artwork.",
-      "images": ["/public/images/products/catalogue/danz-founding-runner-001.png"],
-      "priceDisplay": "Coming soon",
-      "status": "published"
-    },
-    {
-      "id": "danz-tee-all-i-do-is-run",
-      "slug": "tee-all-i-do-is-run",
-      "name": "Danz Tee — All I Do Is Run.",
-      "category": "Danz Tee",
-      "description": "The approved Danz All I Do Is Run. design, shown with its original front and back catalogue artwork.",
-      "images": ["/public/images/products/catalogue/danz-tee-all-i-do-is-run.png"],
-      "priceDisplay": "Coming soon",
-      "status": "published"
-    },
-    {
-      "id": "danz-tee-run-or-fun-why-not-both",
-      "slug": "tee-run-or-fun-why-not-both",
-      "name": "Danz Tee — Run or Fun? Why Not Both.",
-      "category": "Danz Tee",
-      "description": "The approved Danz Run or Fun? Why Not Both. design, shown with its original front and back catalogue artwork.",
-      "images": ["/public/images/products/catalogue/danz-tee-run-or-fun-why-not-both.png"],
-      "priceDisplay": "Coming soon",
-      "status": "published"
-    },
-    {
-      "id": "danz-tee-the-run-lab",
-      "slug": "tee-the-run-lab",
-      "name": "Danz Tee — The Run Lab",
-      "category": "Danz Tee",
-      "description": "The approved Danz The Run Lab design, shown with its original front and back catalogue artwork.",
-      "images": ["/public/images/products/catalogue/danz-tee-the-run-lab.png"],
-      "priceDisplay": "Coming soon",
-      "status": "published"
-    },
-    {
-      "id": "danz-tee-run-lab-repeat",
-      "slug": "tee-run-lab-repeat",
-      "name": "Danz Tee — Run. Lab. Repeat.",
-      "category": "Danz Tee",
-      "description": "The approved Danz Run. Lab. Repeat. design, shown with its original front and back catalogue artwork.",
-      "images": ["/public/images/products/catalogue/danz-tee-run-lab-repeat.png"],
-      "priceDisplay": "Coming soon",
-      "status": "published"
-    },
-    {
-      "id": "danz-minimal-tee",
-      "slug": "minimal-tee",
-      "name": "Danz Minimal Tee",
-      "category": "Danz Tee",
-      "description": "The approved clean, front-only Danz Minimal Tee design, shown from the original catalogue artwork.",
-      "images": ["/public/images/products/catalogue/danz-minimal-tee.png"],
+      "id": "danz-run-lab-2-in-1-running-shorts",
+      "slug": "run-lab-2-in-1-running-shorts",
+      "name": "Danz Run Lab 2-in-1 Running Shorts",
+      "category": "Running Shorts",
+      "description": "The approved Danz Run Lab 2-in-1 running shorts with an outer shell, compression liner and runner-focused pocket details.",
+      "images": [
+        {
+          "src": "/public/images/products/danz-run-lab-2-in-1-running-shorts.png",
+          "label": "Product specification",
+          "alt": "Approved Danz Run Lab 2-in-1 Running Shorts product sheet"
+        }
+      ],
+      "features": [
+        "Lightweight fabric",
+        "Breathable construction",
+        "Quick-dry performance",
+        "Made for runners"
+      ],
       "priceDisplay": "Coming soon",
       "status": "published"
     }
   ],
   "sourceCatalogues": [
-    "/public/images/products/sources/shorts.png",
-    "/public/images/products/sources/ChatGPT Image Sep 18, 2026, 02_11_33 PM.png",
-    "/public/images/products/sources/DANZ Run Lab Shirt Design Catalogue.png",
-    "/public/images/products/sources/DANZ Run Lab T-Shirt Collection.png",
-    "/public/images/products/sources/DANZ The Run Lab Shirt Collection.png"
+    "/public/images/products/danz-run-lab-performance-tee.png",
+    "/public/images/products/danz-run-lab-2-in-1-running-shorts.png"
   ]
 }

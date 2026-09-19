@@ -344,7 +344,7 @@
       </article>`;
     }).join("");
     document.querySelector("#shop-content").innerHTML = `
-      <header class="editorial-header"><p class="eyebrow">Danz Shop</p><h1>Run in Danz.</h1><p>Original Danz merchandise, using the approved designs exactly as created.</p></header>
+      <header class="editorial-header shop-header"><h1>Original Danz merchandise</h1></header>
       ${products.length ? `<div class="product-grid">${cards}</div>` : `<div class="empty-state shop-empty"><strong>No products are published yet.</strong><p>Approved Danz merchandise will appear here when its product record is published.</p></div>`}`;
     setMeta("Shop | Danz", "Shop approved Danz running merchandise designs.");
     showPage("shop-page");

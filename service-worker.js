@@ -1,4 +1,4 @@
-const cacheName = "danz-run-lab-v7";
+const cacheName = "danz-run-lab-v8";
 const appShell = [
   "/",
   "/index.html",
@@ -13,25 +13,8 @@ const appShell = [
   "/content/products.json",
   "/content/run-spots.json",
   "/content/site.json",
-  "/public/images/products/shorts/danz-shorts-main-front-back.png",
-  "/public/images/products/shorts/danz-shorts-front.png",
-  "/public/images/products/shorts/danz-shorts-back.png",
-  "/public/images/products/shorts/danz-shorts-compression-liner.png",
-  "/public/images/products/shorts/danz-shorts-phone-pocket.png",
-  "/public/images/products/shorts/danz-shorts-rear-zip-pocket.png",
-  "/public/images/products/sources/shorts.png",
-  "/public/images/products/catalogue/danz-performance-tee-run-measure-improve.png",
-  "/public/images/products/catalogue/danz-performance-tee-find-your-pace-then-break-it.png",
-  "/public/images/products/catalogue/danz-performance-tee-run-better.png",
-  "/public/images/products/catalogue/danz-performance-tee-how-fast-can-you-become.png",
-  "/public/images/products/catalogue/danz-performance-tee-chase-your-next-pb.png",
-  "/public/images/products/catalogue/danz-performance-tee-whats-your-number.png",
-  "/public/images/products/catalogue/danz-founding-runner-001.png",
-  "/public/images/products/catalogue/danz-tee-all-i-do-is-run.png",
-  "/public/images/products/catalogue/danz-tee-run-or-fun-why-not-both.png",
-  "/public/images/products/catalogue/danz-tee-the-run-lab.png",
-  "/public/images/products/catalogue/danz-tee-run-lab-repeat.png",
-  "/public/images/products/catalogue/danz-minimal-tee.png",
+  "/public/images/products/danz-run-lab-performance-tee.png",
+  "/public/images/products/danz-run-lab-2-in-1-running-shorts.png",
 ];
 
 self.addEventListener("install", (event) => {
