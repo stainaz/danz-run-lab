@@ -2,7 +2,7 @@
   "newsletter": {
     "provider": "mailerlite",
     "endpoint": "/api/subscribe",
-    "status": "awaiting-credentials",
+    "status": "configured",
     "doubleOptIn": true
   }
 }
