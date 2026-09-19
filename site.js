@@ -265,6 +265,12 @@
     const today = new Date().toISOString().slice(0, 10);
     const article = content.weekly.articles.find((item) => item.slug === slug && item.status === "published" && item.publishedDate <= today);
     if (!article) return renderNotFound();
+    const sectionIcons = [
+      `<svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="10"></circle><path d="M16 10v7"></path><circle class="fill" cx="16" cy="22" r="1.25"></circle></svg>`,
+      `<svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="11"></circle><circle cx="16" cy="16" r="5"></circle><path d="M16 5v4M27 16h-4M16 27v-4M5 16h4"></path></svg>`,
+      `<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M6 24c5 0 5-8 10-8h9"></path><path d="m21 12 4 4-4 4"></path><circle class="fill" cx="6" cy="24" r="2"></circle></svg>`,
+      `<svg viewBox="0 0 32 32" aria-hidden="true"><rect x="6" y="7" width="20" height="19" rx="1"></rect><path d="M11 5v5M21 5v5M6 13h20M11 19l3 3 7-7"></path></svg>`,
+    ];
     const hero = article.heroImage
       ? `<img class="article-hero-image" src="${escapeHtml(article.heroImage)}" alt="" />`
       : `<div class="article-hero-type"><span>W${article.weekNumber}</span><strong>${escapeHtml(article.category)}</strong></div>`;
@@ -280,7 +286,7 @@
         </header>
         ${hero}
         <div class="article-body">
-          ${article.body.map((section) => `<section><h2>${escapeHtml(section.heading)}</h2>${section.paragraphs.map((paragraph) => `<p>${escapeHtml(paragraph)}</p>`).join("")}</section>`).join("")}
+          ${article.body.map((section, index) => `<section><div class="article-section-heading"><span class="article-section-icon">${sectionIcons[index % sectionIcons.length]}</span><h2>${escapeHtml(section.heading)}</h2></div><div class="article-section-copy">${section.paragraphs.map((paragraph) => `<p>${escapeHtml(paragraph)}</p>`).join("")}</div></section>`).join("")}
           ${article.quickTakeaway ? `<aside class="quick-takeaway"><p class="eyebrow">QUICK TAKEAWAY</p><p>${escapeHtml(article.quickTakeaway)}</p></aside>` : ""}
         </div>
       </article>`;
@@ -394,7 +400,7 @@
       ["spots", "content/run-spots.json"],
       ["site", "content/site.json"],
     ].map(async ([key, url]) => {
-      const response = await fetch(url);
+      const response = await fetch(url, { cache: "no-store" });
       if (!response.ok) throw new Error(`Could not load ${url}`);
       return [key, await response.json()];
     }));

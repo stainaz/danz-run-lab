@@ -1,4 +1,4 @@
-const cacheName = "danz-run-lab-v8";
+const cacheName = "danz-run-lab-v9";
 const appShell = [
   "/",
   "/index.html",

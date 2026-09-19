@@ -239,9 +239,15 @@ a { color: inherit; }
 .article-hero-type strong { font: 500 12px "DM Mono", monospace; text-transform: uppercase; }
 .article-hero-image { display: block; width: 100%; max-height: 660px; margin: 65px 0; object-fit: cover; }
 .article-body { max-width: 790px; margin: 0 auto 100px; }
-.article-body section { display: grid; grid-template-columns: 190px 1fr; gap: 55px; padding: 45px 0; border-top: 1px solid var(--line); }
-.article-body h2 { font: 500 13px "DM Mono", monospace; letter-spacing: .07em; text-transform: uppercase; }
-.article-body p { margin: 0 0 20px; font-size: 18px; line-height: 1.82; }
+.article-body section { padding: 48px 0; border-top: 1px solid var(--line); }
+.article-section-heading { display: flex; align-items: center; gap: 16px; margin-bottom: 28px; }
+.article-section-icon { width: 46px; height: 46px; flex: 0 0 46px; display: grid; place-items: center; border: 1px solid var(--ink); background: var(--lime); }
+.article-section-icon svg { width: 27px; height: 27px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.5; }
+.article-section-icon svg .fill { fill: currentColor; stroke: none; }
+.article-body h2 { margin: 0; font: 500 13px "DM Mono", monospace; letter-spacing: .07em; text-transform: uppercase; }
+.article-section-copy { max-width: 720px; }
+.article-body .article-section-copy p { margin: 0 0 22px; font-size: 18px; line-height: 1.82; }
+.article-body .article-section-copy p:last-child { margin-bottom: 0; }
 .quick-takeaway { margin-top: 30px; padding: 38px; background: var(--lime); }
 .quick-takeaway .eyebrow { color: var(--ink); }
 .quick-takeaway p:last-child { margin: 0; font-size: 21px; font-weight: 700; line-height: 1.5; }
@@ -393,8 +399,10 @@ footer { display: flex; justify-content: space-between; padding: 24px 28px 40px;
   .newsletter-card form { grid-template-columns: 1fr; }
   .newsletter-card .newsletter-message { grid-column: 1; }
   .article-hero-type { min-height: 250px; margin: 45px 0; padding: 25px; }
-  .article-body section { grid-template-columns: 1fr; gap: 20px; padding: 36px 0; }
-  .article-body p { font-size: 17px; }
+  .article-body section { padding: 36px 0; }
+  .article-section-heading { margin-bottom: 22px; }
+  .article-section-icon { width: 42px; height: 42px; flex-basis: 42px; }
+  .article-body .article-section-copy p { font-size: 17px; }
   .build-hero { min-height: 520px; padding-top: 55px; }
   .two-column-copy { gap: 35px; padding: 65px 0; }
   .vision-grid > div { min-height: 0; border: 0 !important; border-bottom: 1px solid var(--line) !important; }
